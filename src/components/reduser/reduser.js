@@ -22,12 +22,10 @@
 //       return {...state, activeButtonFilter: 'fastest'};
 //     case 'clickOptimalButton':
 //       return {...state, activeButtonFilter: 'optimal'};
-    
+
 //     default:
 //       return state;
 //   }
 // };
-
-
 
 // export default reduser;

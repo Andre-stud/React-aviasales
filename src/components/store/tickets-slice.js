@@ -1,56 +1,79 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchTickets = createAsyncThunk(
-    'tickets/fetchTickets',
-    async (_, {rejectWithValue} ) => {
-        try{
+const arr = [];
 
-            const responseId =  await fetch('https://aviasales-test-api.kata.academy/search');
+export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { rejectWithValue, dispatch }) => {
+  try {
+    const responseId = await fetch('https://aviasales-test-api.kata.academy/search');
 
-            if(!responseId.ok){
-                throw new Error('responseId error');
-            }
+    if (!responseId.ok) {
+      throw new Error('responseId error');
+    }
 
-            const searchId = await responseId.json();
-    
-            const responseTickets = await fetch(`https://aviasales-test-api.kata.academy/tickets?searchId=${searchId.searchId}`);
-    
-            if(!responseTickets.ok){
-                throw new Error('responseTickets error');
-            }
+    const searchId = await responseId.json();
 
-            const ticketsData = await responseTickets.json();
-    
-            return ticketsData;
+    // eslint-disable-next-line no-inner-declarations
+    async function recurTicked() {
+      try {
+        const responseTickets = await fetch(
+          `https://aviasales-test-api.kata.academy/tickets?searchId=${searchId.searchId}`
+        );
 
-        }catch(error){
-            return rejectWithValue(error.message);
+        if (!responseTickets.ok) {
+          throw new Error('responseTickets error');
         }
-    }
-);
 
-const ticketsSlice = createSlice({
-    name: 'tickets',
-    initialState: {
-        tickets: [],
-        status: null,
-        error: null,
-    },
-    extraReducers: {
-        [fetchTickets.pending]: (state) =>{
-            state.status = 'loading';
-            state.error = null;
-        },
-        [fetchTickets.fulfilled]: (state, actions) =>{
-            state.status = 'resolved';
-            state.tickets = actions.payload;
-        },
-        [fetchTickets.rejected]: (state, actions) =>{
-            state.status = 'rejected';
-            state.error = actions.payload;
-        },
+        const ticketsData = await responseTickets.json();
+
+        if (ticketsData.stop !== true) {
+          arr.push(...ticketsData.tickets);
+          recurTicked();
+        }
+        if (ticketsData.stop === true) {
+          // eslint-disable-next-line no-use-before-define
+          return dispatch(updateDataTickets(arr));
+        }
+
+        return ticketsData.tickets;
+      } catch (error) {
+        recurTicked();
+        return rejectWithValue(error.message);
+      }
     }
+
+    return await recurTicked();
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
 });
 
-export const {clickButtonFilter} = ticketsSlice.actions;
+const ticketsSlice = createSlice({
+  name: 'tickets',
+  initialState: {
+    tickets: [],
+    status: null,
+    error: null,
+  },
+  reducers: {
+    updateDataTickets(state, actions) {
+      state.tickets = actions.payload;
+    },
+  },
+  extraReducers: {
+    [fetchTickets.pending]: (state) => {
+      state.status = 'loading';
+      state.error = null;
+    },
+    [fetchTickets.fulfilled]: (state, actions) => {
+      state.status = 'resolved';
+      state.tickets = actions.payload;
+    },
+    [fetchTickets.rejected]: (state, actions) => {
+      state.status = 'rejected';
+      state.error = actions.payload;
+    },
+  },
+});
+
+export const { updateDataTickets } = ticketsSlice.actions;
 export default ticketsSlice.reducer;

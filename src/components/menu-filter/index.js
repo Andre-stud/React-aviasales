@@ -1,3 +1,3 @@
 import MenuFilter from './menu-filter';
 
-export default MenuFilter; 
+export default MenuFilter;

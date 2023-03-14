@@ -5,9 +5,9 @@ import checkboxReducer from './checkbox-slice';
 import ticketsReducer from './tickets-slice';
 
 export default configureStore({
-    reducer:{
-        button: buttonReducer,
-        checkbox: checkboxReducer,
-        tickets: ticketsReducer,
-    }
+  reducer: {
+    button: buttonReducer,
+    checkbox: checkboxReducer,
+    tickets: ticketsReducer,
+  },
 });

@@ -1,9 +1,7 @@
 function FooterButton() {
   return (
     <div className="App">
-        <p>
-           FooterButton
-        </p>
+      <p>FooterButton</p>
     </div>
   );
 }
