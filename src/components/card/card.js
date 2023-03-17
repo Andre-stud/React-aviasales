@@ -1,18 +1,32 @@
 import './card.scss';
+import { format, add } from 'date-fns';
 
 function Card({ price, flightThere, flightBack, carrier }) {
+  const flightStop = (value) =>
+    value.map((element, idx) => {
+      if (idx + 1 === value.length) {
+        return `${element}`;
+      }
+      return `${element}, `;
+    });
+
+  const arrivalTime = (value, time) =>
+    format(
+      add(new Date(value), {
+        minutes: time,
+      }),
+      'HH:mm'
+    );
+
   const flightThereOrigin = flightThere.origin;
   const flightThereDestination = flightThere.destination;
   const flightThereDuration = flightThere.duration;
   const flightThereDurationHour = Math.trunc(flightThereDuration / 60);
   const flightThereDurationMinutes = flightThereDuration - flightThereDurationHour * 60;
 
-  const flightThereStops = flightThere.stops.map((element, idx) => {
-    if (idx + 1 === flightThere.stops.length) {
-      return `${element}`;
-    }
-    return `${element}, `;
-  });
+  const departureTimeThere = format(new Date(flightThere.date), 'HH:mm');
+  const arrivalTimeThere = arrivalTime(flightThere.date, flightThereDuration);
+  const flightThereStops = flightStop(flightThere.stops);
 
   const flightBackOrigin = flightBack.origin;
   const flightBackDestination = flightBack.destination;
@@ -20,12 +34,9 @@ function Card({ price, flightThere, flightBack, carrier }) {
   const flightBackDurationHour = Math.trunc(flightBackDuration / 60);
   const flightBackDurationMinutes = flightBackDuration - flightBackDurationHour * 60;
 
-  const flightBackStops = flightBack.stops.map((element, idx) => {
-    if (idx + 1 === flightBack.stops.length) {
-      return `${element}`;
-    }
-    return `${element}, `;
-  });
+  const departureTimeBack = format(new Date(flightBack.date), 'HH:mm');
+  const arrivalTimeBack = arrivalTime(flightBack.date, flightBackDuration);
+  const flightBackStops = flightStop(flightBack.stops);
 
   const quantityTransfer = (quantity) => {
     if (quantity >= 2) {
@@ -34,7 +45,6 @@ function Card({ price, flightThere, flightBack, carrier }) {
     if (quantity === 1) {
       return 'пересадка';
     }
-
     return 'пересадок';
   };
 
@@ -50,11 +60,14 @@ function Card({ price, flightThere, flightBack, carrier }) {
         </span>
         <span className="card-discription__text">В пути</span>
         <span className="card-discription__text">
-          {flightThereStops.length} {quantityTransfer(flightThereStops.length)}
+          {flightThereStops.length}
+          {quantityTransfer(flightThereStops.length)}
         </span>
       </div>
       <div className="card-data">
-        <span className="card-data__text">10:45 – 08:00</span>
+        <span className="card-data__text">
+          {departureTimeThere} – {arrivalTimeThere}
+        </span>
         <span className="card-data__text">
           {flightThereDurationHour}ч {flightThereDurationMinutes}м
         </span>
@@ -71,7 +84,9 @@ function Card({ price, flightThere, flightBack, carrier }) {
         </span>
       </div>
       <div className="card-data">
-        <span className="card-data__text">11:20 – 00:50</span>
+        <span className="card-data__text">
+          {departureTimeBack} – {arrivalTimeBack}
+        </span>
         <span className="card-data__text">
           {flightBackDurationHour}ч {flightBackDurationMinutes}м
         </span>

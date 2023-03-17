@@ -31,7 +31,7 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, {
         }
         if (ticketsData.stop === true) {
           // eslint-disable-next-line no-use-before-define
-          return dispatch(updateDataTickets(arr));
+          return dispatch(updateTickets(arr));
         }
 
         return ticketsData.tickets;
@@ -51,12 +51,16 @@ const ticketsSlice = createSlice({
   name: 'tickets',
   initialState: {
     tickets: [],
+    ticketsData: [],
     status: null,
     error: null,
   },
   reducers: {
-    updateDataTickets(state, actions) {
+    updateTickets(state, actions) {
       state.tickets = actions.payload;
+    },
+    updateDataTickets(state, actions) {
+      state.ticketsData = actions.payload;
     },
   },
   extraReducers: {
@@ -75,5 +79,5 @@ const ticketsSlice = createSlice({
   },
 });
 
-export const { updateDataTickets } = ticketsSlice.actions;
+export const { updateTickets, updateDataTickets } = ticketsSlice.actions;
 export default ticketsSlice.reducer;

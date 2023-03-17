@@ -4,11 +4,11 @@ const checkboxSlice = createSlice({
   name: 'activeCheckbox',
   initialState: {
     checkbox: [
-      { name: 'clickAllCheckbox', isActive: false },
-      { name: 'clickNonStopCheckbox', isActive: false },
-      { name: 'click1TransfersCheckbox', isActive: false },
-      { name: 'click2TransfersCheckbox', isActive: false },
-      { name: 'click3TransfersCheckbox', isActive: false },
+      { name: 'clickAllCheckbox', isActive: false, value: 'all' },
+      { name: 'clickNonStopCheckbox', isActive: false, value: 0 },
+      { name: 'click1TransfersCheckbox', isActive: false, value: 1 },
+      { name: 'click2TransfersCheckbox', isActive: false, value: 2 },
+      { name: 'click3TransfersCheckbox', isActive: false, value: 3 },
     ],
   },
   reducers: {
