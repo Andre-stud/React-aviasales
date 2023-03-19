@@ -40,12 +40,12 @@ function Card({ price, flightThere, flightBack, carrier }) {
 
   const quantityTransfer = (quantity) => {
     if (quantity >= 2) {
-      return 'пересадки';
+      return ' пересадки';
     }
     if (quantity === 1) {
-      return 'пересадка';
+      return ' пересадка';
     }
-    return 'пересадок';
+    return ' пересадок';
   };
 
   return (
