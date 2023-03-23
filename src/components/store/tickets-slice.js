@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const arr = [];
-
 export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { rejectWithValue, dispatch }) => {
   try {
     const responseId = await fetch('https://aviasales-test-api.kata.academy/search');
@@ -12,6 +10,8 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, {
 
     const searchId = await responseId.json();
 
+    const arr = [];
+
     // eslint-disable-next-line no-inner-declarations
     async function recurTicked() {
       try {
@@ -20,30 +20,40 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, {
         );
 
         if (!responseTickets.ok) {
-          throw new Error('responseTickets error');
+          throw Error('responseTickets error');
         }
 
         const ticketsData = await responseTickets.json();
+        arr.push(...ticketsData.tickets);
 
         if (ticketsData.stop !== true) {
-          arr.push(...ticketsData.tickets);
+          // eslint-disable-next-line no-use-before-define
+          dispatch(updateTickets(arr));
           recurTicked();
         }
+
         if (ticketsData.stop === true) {
           // eslint-disable-next-line no-use-before-define
-          return dispatch(updateTickets(arr));
+          dispatch(loadCompleted());
         }
 
         return ticketsData.tickets;
       } catch (error) {
-        recurTicked();
+        if (error.message === 'responseTickets error') {
+          recurTicked();
+        }
+        if (error.message === 'Failed to fetch') {
+          // eslint-disable-next-line no-use-before-define
+          dispatch(networkError());
+        }
+
         return rejectWithValue(error.message);
       }
     }
 
     return await recurTicked();
-  } catch (error) {
-    return rejectWithValue(error.message);
+  } catch (err) {
+    return rejectWithValue(err.message);
   }
 });
 
@@ -54,13 +64,26 @@ const ticketsSlice = createSlice({
     ticketsData: [],
     status: null,
     error: null,
+    statusLoad: null,
+    statusNetworkError: null,
   },
   reducers: {
     updateTickets(state, actions) {
-      state.tickets = actions.payload;
+      const array = [];
+      array.push(...actions.payload);
+      state.tickets = array;
     },
+
     updateDataTickets(state, actions) {
       state.ticketsData = actions.payload;
+    },
+
+    loadCompleted(state) {
+      state.statusLoad = true;
+    },
+
+    networkError(state) {
+      state.statusNetworkError = true;
     },
   },
   extraReducers: {
@@ -79,5 +102,5 @@ const ticketsSlice = createSlice({
   },
 });
 
-export const { updateTickets, updateDataTickets } = ticketsSlice.actions;
+export const { updateTickets, updateDataTickets, loadCompleted, networkError } = ticketsSlice.actions;
 export default ticketsSlice.reducer;

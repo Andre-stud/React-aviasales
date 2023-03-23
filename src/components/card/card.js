@@ -52,7 +52,7 @@ function Card({ price, flightThere, flightBack, carrier }) {
     <div className="card">
       <div className="card-header">
         <div className="card-header__text">{`${price} Р`}</div>
-        <img src={`https://pics.avs.io/99/36/${carrier}.png`} alt="logo" />
+        <img src={`https://pics.avs.io/99/36/${carrier}.png`} style={{ width: '120px', height: '40px' }} alt="logo" />
       </div>
       <div className="card-discription">
         <span className="card-discription__text">

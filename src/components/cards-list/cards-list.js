@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Spin } from 'antd';
+import { Spin, Alert } from 'antd';
 import { useEffect } from 'react';
 
 import { updateDataTickets } from '../store/tickets-slice';
@@ -15,6 +15,9 @@ function CardsList({ count }) {
   const statusTicketsSlice = useSelector((state) => state.tickets.status);
   const checkboxData = useSelector((active) => active.checkbox.checkbox);
   const activeButtonFilter = useSelector((active) => active.button.button);
+  const statusLoadTickets = useSelector((status) => status.tickets.statusLoad);
+
+  const statusNetworkError = useSelector((status) => status.tickets.statusNetworkError);
 
   useEffect(() => {
     const activeCheckbox = checkboxData.filter((el) => el.isActive === true);
@@ -43,8 +46,12 @@ function CardsList({ count }) {
 
   const activeCheckboxData = checkboxData.filter((el) => el.isActive === true);
 
+  const error = statusNetworkError ? (
+    <Alert message="Error Text" type="error" description="Network error" style={{ marginTop: '20px' }} />
+  ) : null;
+
   const spiner =
-    activeCheckboxData.length !== 0 && statusTicketsSlice !== 'resolved' ? (
+    activeCheckboxData.length !== 0 && !statusLoadTickets && !statusNetworkError ? (
       <Spin className="spiner" tip="Loading" size="large" />
     ) : null;
 
@@ -65,7 +72,7 @@ function CardsList({ count }) {
   }
 
   const cards =
-    statusTicketsSlice === 'resolved' && !notFoundText
+    (statusTicketsSlice === 'resolved' || ticketsData.length !== 0) && !notFoundText
       ? ticketsData.slice(0, count).map((element, id) => {
           const { price, carrier } = element;
           const flightThere = element.segments[0];
@@ -81,9 +88,10 @@ function CardsList({ count }) {
 
   return (
     <ul className="cards-list">
+      {error}
+      {spiner}
       {cards}
       {notFoundText}
-      {spiner}
     </ul>
   );
 }

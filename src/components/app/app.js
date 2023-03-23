@@ -14,6 +14,8 @@ function App() {
   const [count, setCount] = useState(5);
 
   const activeButtonFilter = useSelector((active) => active.button.button);
+  const statusLoadTickets = useSelector((status) => status.tickets.statusLoad);
+  const ticketsData = useSelector((state) => state.tickets.ticketsData);
 
   const dispatch = useDispatch();
 
@@ -48,15 +50,20 @@ function App() {
     );
   });
 
+  const showMoreButton =
+    statusLoadTickets && ticketsData.length !== 0 ? (
+      <Button className="footer-button" onClick={onClickButtonNext} type="primary">
+        Показать еще 5 билетов!{' '}
+      </Button>
+    ) : null;
+
   return (
     <>
       <HeaderLogo />
       <MenuFilter />
       <ul className="button-group">{buttons}</ul>
       <CardsList count={count} />
-      <Button className="footer-button" onClick={onClickButtonNext} type="primary">
-        Показать еще 5 билетов!
-      </Button>
+      {showMoreButton}
     </>
   );
 }
