@@ -1,1 +1,1 @@
-https://aviasale-alpha.vercel.app/
+https://aviasale-andrejzakasovskij-gmailcom.vercel.app
