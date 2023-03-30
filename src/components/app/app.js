@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import HeaderLogo from '../header-logo';
 import MenuFilter from '../menu-filter';
 import CardsList from '../cards-list';
-import { clickButtonFilter } from '../store/button-slice';
-import { fetchTickets } from '../store/tickets-slice';
+import { clickButtonFilter } from '../../store/button-sort-slice';
+import { fetchTickets } from '../../store/tickets-slice';
 
 import './app.scss';
 
@@ -14,7 +14,6 @@ function App() {
   const [count, setCount] = useState(5);
 
   const activeButtonFilter = useSelector((active) => active.button.button);
-  const statusLoadTickets = useSelector((status) => status.tickets.statusLoad);
   const ticketsData = useSelector((state) => state.tickets.ticketsData);
 
   const dispatch = useDispatch();
@@ -51,7 +50,7 @@ function App() {
   });
 
   const showMoreButton =
-    statusLoadTickets && ticketsData.length !== 0 ? (
+    ticketsData.length !== 0 ? (
       <Button className="footer-button" onClick={onClickButtonNext} type="primary">
         Показать еще 5 билетов!{' '}
       </Button>

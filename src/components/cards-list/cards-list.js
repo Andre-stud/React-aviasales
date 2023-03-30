@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Spin, Alert } from 'antd';
 import { useEffect } from 'react';
 
-import { updateDataTickets } from '../store/tickets-slice';
+import { updateDataTickets } from '../../store/tickets-slice';
 import Card from '../card';
 
 import './cards-list.scss';

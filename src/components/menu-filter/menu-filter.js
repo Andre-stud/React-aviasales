@@ -2,7 +2,7 @@ import { Checkbox } from 'antd';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { clickCheckboxFilter, checkedAllCheckbox, notCheckedAllCheckbox } from '../store/checkbox-slice';
+import { clickCheckboxFilter, checkedAllCheckbox, notCheckedAllCheckbox } from '../../store/checkbox-filter-slice';
 
 import './menu-filter.scss';
 
@@ -18,16 +18,12 @@ function MenuFilter() {
   const activeCheckbox = useSelector((active) => active.checkbox.checkbox);
 
   const chackedCheckboxNameAll = activeCheckbox[0].isActive;
-  const basicCheckboxesStatus =
-    activeCheckbox[1].isActive &&
-    activeCheckbox[2].isActive &&
-    activeCheckbox[3].isActive &&
-    activeCheckbox[4].isActive;
+  const basicCheckboxesStatus = activeCheckbox.slice(1).filter((el) => el.isActive === true);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (basicCheckboxesStatus && !chackedCheckboxNameAll) {
+    if (basicCheckboxesStatus.length === 4 && !chackedCheckboxNameAll) {
       dispatch(clickCheckboxFilter('clickAllCheckbox'));
     }
   }, [basicCheckboxesStatus, chackedCheckboxNameAll, dispatch]);

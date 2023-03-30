@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const buttonSlice = createSlice({
+const buttonSortSlice = createSlice({
   name: 'activeButtonFilter',
   initialState: {
     button: 'cheapest',
@@ -12,5 +12,5 @@ const buttonSlice = createSlice({
   },
 });
 
-export const { clickButtonFilter } = buttonSlice.actions;
-export default buttonSlice.reducer;
+export const { clickButtonFilter } = buttonSortSlice.actions;
+export default buttonSortSlice.reducer;

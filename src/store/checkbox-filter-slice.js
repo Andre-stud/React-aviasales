@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const checkboxSlice = createSlice({
+const checkboxFilterSlice = createSlice({
   name: 'activeCheckbox',
   initialState: {
     checkbox: [
@@ -25,5 +25,5 @@ const checkboxSlice = createSlice({
   },
 });
 
-export const { clickCheckboxFilter, checkedAllCheckbox, notCheckedAllCheckbox } = checkboxSlice.actions;
-export default checkboxSlice.reducer;
+export const { clickCheckboxFilter, checkedAllCheckbox, notCheckedAllCheckbox } = checkboxFilterSlice.actions;
+export default checkboxFilterSlice.reducer;
